@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Formulário de Assessment Cloud</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <h1>Formulário de Assessment de Operações Cloud</h1>
+    <form action="/submit" method="post">
+        {% for category in categories %}
+            <h2>{{ category.name }}</h2>
+            {% for question in category.questions %}
+                <fieldset>
+                    <legend>{{ question.text }} (Peso: {{ question.weight }})</legend>
+                    {% for option_value in answer_options %}
+                        <label>
+                            <input type="radio" name="{{ question.id }}" value="{{ option_value }}" required>
+                            {{ option_value | replace("total", "Atendimento Total") | replace("parcial", "Atendimento Parcial") | replace("nao_atendida", "Não Atendida") }}
+                        </label>
+                    {% endfor %}
+                </fieldset>
+            {% endfor %}
+        {% endfor %}
+        <button type="submit">Enviar Avaliação</button>
+    </form>
+</body>
+</html>

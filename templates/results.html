@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Resultados do Assessment Cloud</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="results-container">
+        <h1>Resultados do Assessment</h1>
+
+        <!-- Optional: Display scores in a table or list before the chart -->
+        <h2>Pontuações por Categoria:</h2>
+        <ul>
+            {% for category_id, data in category_data.items() %}
+                <li>{{ data.name }}: {{ data.score }}</li>
+            {% endfor %}
+        </ul>
+    </div>
+
+    <div class="chart-container">
+        <canvas id="radarChart"></canvas>
+    </div>
+
+    <script>
+        const ctx = document.getElementById('radarChart').getContext('2d');
+        const labels = {{ labels | tojson }};
+        const scores = {{ scores | tojson }};
+
+        new Chart(ctx, {
+            type: 'radar',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'Pontuação por Categoria',
+                    data: scores,
+                    fill: true,
+                    backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                    borderColor: 'rgb(54, 162, 235)',
+                    pointBackgroundColor: 'rgb(54, 162, 235)',
+                    pointBorderColor: '#fff',
+                    pointHoverBackgroundColor: '#fff',
+                    pointHoverBorderColor: 'rgb(54, 162, 235)'
+                }]
+            },
+            options: {
+                elements: {
+                    line: {
+                        borderWidth: 3
+                    }
+                },
+                scales: {
+                    r: {
+                        angleLines: {
+                            display: true
+                        },
+                        suggestedMin: 0,
+                        // suggestedMax: could be set if max scores are uniform or pre-calculated
+                    }
+                }
+            }
+        });
+    </script>
+    <p style="text-align:center;"><a href="{{ url_for('assessment_form') }}">Fazer novo assessment</a></p>
+</body>
+</html>
